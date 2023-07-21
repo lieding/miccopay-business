@@ -1,0 +1,25 @@
+.pageWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginForm {
+  padding: 10px 15px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 2px 2px 20px #6B6B6B;
+
+  .formInput {
+    align-items: center;
+    margin: 5px 0;
+    span {
+      flex: 1;
+      display: inline-block;
+    }
+    input {
+      flex: 1;
+      margin-left: 5px;
+    }
+  }
+}

@@ -1,0 +1,52 @@
+body {
+  padding: 0;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+.App {
+  font-family: sans-serif;
+  width: 100%;
+  height: 100%;
+}
+
+.page-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+:root {
+  --color-paid: #f79410;
+  --color-confirmed: blue;
+  --color-finished: #44d400;
+  --color-canceled: red;
+}
+
+input {
+  padding: 3px 5px;
+  border-radius: 6px;
+  border: 1px solid #e6e6e6;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.order-modal {
+  /* width: 400px; */
+}
+
+.textAlign {
+  text-align: center;
+}
+
+.bold {
+  font-weight: bold;
+}

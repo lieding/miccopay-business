@@ -1,0 +1,173 @@
+.pageWrapper {
+  padding: 10px 15px;
+  box-sizing: border-box;
+}
+
+.topSummaryRow {
+  display: flex;
+  padding: 10px 0;
+  > div {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 15px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 10px rgba(107, 107, 107, .1);
+    .ball {
+      margin-right: 6px;
+    }
+    .title {
+      font-weight: bold;
+      font-style: italic;
+      margin-right: 6px;
+    }
+  }
+  span {
+    display: inline-block;
+  }
+}
+
+.tableWrapper {}
+
+.table {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+
+  .title {
+    flex: unset;
+    margin-right: 10px;
+    text-align: center;
+    span {
+      display: inline-block;
+      font-size: 10px;
+    }
+  }
+  .content {
+    flex: 1;
+    display: flex;
+    height: 100%;
+    font-size: 12px;
+
+    .orderWrapper {
+      display: flex;
+      flex-direction: column;
+      padding: 5px 10px;
+      margin-left: 10px;
+      border-radius: 16px;
+      > div {
+        flex: unset;
+      }
+      .courseList {
+        flex: 1;
+      }
+      .total {
+        font-size: 16px;
+        font-weight: bold;
+        span {
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
+.paid {
+  background: var(--color-paid);
+}
+
+.confirmed {
+  background: var(--color-confirmed);
+}
+
+.finished {
+  background: var(--color-finished);
+}
+
+.canceled {
+  background: var(--color-canceled);
+}
+
+.ball {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+}
+
+.courseList {
+  flex: 1;
+  min-height: 60px;
+  .course {
+    display: flex;
+    align-items: center;
+    span {
+      display: inline-block;
+      margin-right: 5px;
+    }
+    .name {
+      width: 100px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .tip {
+      padding: 1px 3px;
+      border-radius: 3px;
+      background-color: #e4f4f5;
+      color: #4fcfcf;
+      font-size: 10px;
+    }
+  }
+}
+
+.modalContent {
+  display: flex;
+  justify-content: space-evenly;
+  .right {
+    margin-left: 5px;
+  }
+
+  .courseList{
+    .course {
+      span {
+        font-weight: bold;
+      }
+      .name {
+        width: 280px;
+        line-height: 1;
+        white-space: initial;
+        margin-bottom: 6px;
+      }
+    }
+  }
+}
+
+.connectionStatus {
+  position: fixed;
+  z-index: 5;
+  right: 5%;
+  bottom: 5%;
+
+  padding: 3px 10px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px rgba(107, 107, 107, .1);
+
+  display: flex;
+  align-items: center;
+  span {
+    display: inline-block;
+  }
+  &.connected {
+    color: green;
+  }
+  &.closed {
+    color: red;
+  }
+  &.connecting {
+    color: yellow;
+  }
+  .label {
+    margin-left: 5px;
+  }
+}

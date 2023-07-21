@@ -1,0 +1,8 @@
+@media only screen and (max-width: 500px) {
+  .order-modalContent-mini {
+    flex-direction: column;
+  }
+  .order-modalContent-mini .course-list-item-name {
+    max-width: 205px;
+  }
+}
