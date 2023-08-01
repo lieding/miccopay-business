@@ -1,6 +1,15 @@
+@import '../../value.scss';
+
 .pageWrapper {
   padding: 10px 15px;
   box-sizing: border-box;
+}
+
+.logo4SmallScreen {
+  display: none;
+  @media screen and (max-width: $screen1) {
+    display: block;
+  }
 }
 
 .topSummaryRow {
@@ -27,21 +36,17 @@
   }
 }
 
-.tableWrapper {}
-
 .table {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 
-  .title {
+  .tableInfo {
     flex: unset;
-    margin-right: 10px;
-    text-align: center;
-    span {
-      display: inline-block;
-      font-size: 10px;
-    }
+    color: #464255;
+    font-size: 18px;
+    min-width: 80px;
+    font-weight: 700;
   }
   .content {
     flex: 1;
@@ -67,6 +72,19 @@
         span {
           display: inline-block;
         }
+      }
+      &:first-child {
+        margin-left: unset;
+      }
+    }
+  }
+
+  @media screen and (max-width: $screen1) {
+    display: initial;
+    .tableInfo > div {
+      display: inline-block;
+      &:first-child {
+        margin-right: 10px;
       }
     }
   }

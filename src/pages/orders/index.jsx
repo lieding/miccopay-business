@@ -11,12 +11,14 @@ import OrderModal from "./orderModal";
 import CourseList from "./courseList";
 import ConnectionStatusDisplay from "./connectionStatusDisplay";
 import "./index.css";
+import { Logo4OrderPage } from '../../components/icons'
 
 function orderCountSelector(state) {
   return {
     paidCnt: state.paidOrderCnt,
     finishedCnt: state.finishedOrderCnt,
-    tableMap: state.tableMap
+    tableMap: state.tableMap,
+    tableAmtMap: state.tableAmtMap
   };
 }
 
@@ -57,12 +59,12 @@ function Order({ order, nowTimestamp, openModal }) {
   );
 }
 
-function Table({ orders, table, ...params }) {
+function Table({ orders, table, amountCnt, ...params }) {
   return (
     <div className={styles.table}>
-      <div className={styles.title}>
-        <span>Table</span>
-        <h3>{table}</h3>
+      <div className={styles.tableInfo}>
+        <div>Table {table}</div>
+        { amountCnt && <div>{amountCnt}€</div> }
       </div>
       <div className={styles.content}>
         {orders.map((order) => (
@@ -78,7 +80,7 @@ function OrderDisplayPage() {
   const { connectWebsocket, sendMessage, connectionStatus } = useWebsocket({
     connectedCbk: getPendingOrders
   });
-  const { paidCnt, tableMap, finishedCnt } = useWsStore(orderCountSelector);
+  const { paidCnt, tableMap, finishedCnt, tableAmtMap } = useWsStore(orderCountSelector);
   const [nowTimestamp, setTimestamp] = useState(() => Date.now());
 
   const [isModalOpen, toggleModal] = useState(false);
@@ -107,6 +109,9 @@ function OrderDisplayPage() {
 
   return (
     <div className={styles.pageWrapper}>
+      <div className={cls('textAlign', styles.logo4SmallScreen)}>
+        <Logo4OrderPage />
+      </div>
       <TopSummaryRow
         paidCnt={paidCnt}
         tableCnt={tableCnt}
@@ -120,6 +125,7 @@ function OrderDisplayPage() {
             orders={tableMap.get(table)}
             nowTimestamp={nowTimestamp}
             openModal={openModal}
+            amountCnt={tableAmtMap[table]}
           />
         ))}
       </div>

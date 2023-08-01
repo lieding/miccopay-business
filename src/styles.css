@@ -28,15 +28,33 @@ body {
   --color-canceled: red;
 }
 
+/* reset default css */
+
 input {
   padding: 3px 5px;
   border-radius: 6px;
   border: 1px solid #e6e6e6;
 }
 
+button {
+  border: none;
+}
+
+button:disabled {
+  background: grey !important;
+}
+
+/* customized css styles */
+
 .flex-between {
   display: flex;
   justify-content: space-between;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .order-modal {

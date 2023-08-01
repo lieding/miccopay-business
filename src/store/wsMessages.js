@@ -22,6 +22,28 @@ function update(state, item) {
   }
 }
 
+function getAmtCntEachTable (orders) {
+  let cnt = 0;
+  for (const order of orders) {
+    cnt += order.amount || 0;
+  }
+  return cnt.toFixed(2);
+}
+
+function getAmtCntMap (tableMap, oldMap = {} ,table) {
+  if (table) oldMap[table] = getAmtCntEachTable(tableMap.get(table))
+  else {
+    oldMap = {}
+    for (const table of tableMap.keys())
+      oldMap[table] = getAmtCntEachTable(tableMap.get(table))
+  }
+  return oldMap; 
+} 
+
+/**
+ * For updating some value counts
+ * 
+*/
 const updateCnt = (set) => () =>
   set((state) => {
     let paidOrderCnt = 0,
@@ -34,7 +56,8 @@ const updateCnt = (set) => () =>
         else if (order.orderStatus === OrderStatus.FINISHED) ++finishedOrderCnt;
       }
     }
-    return { paidOrderCnt, finishedOrderCnt };
+    const tableAmtMap = getAmtCntMap(state.tableMap);
+    return { paidOrderCnt, finishedOrderCnt, tableAmtMap };
   });
 
 const handleNewMsg = (set) => (data) => {
@@ -54,13 +77,17 @@ const insertPendingOrders = (set) => (orders) => {
   set((state) => {
     state.tableMap.clear();
     const newState = { ...state };
-    for (const order of orders) update(newState, order);
+    for (const order of orders) {
+      update(newState, order);
+    }
+    newState.tableAmtMap = getAmtCntMap(state.tableMap);
     return newState;
   });
 };
 
 const useWsStore = create((set) => ({
   tableMap: new Map(),
+  tableAmtMap: {},
   paidOrderCnt: 0,
   confirmedorderCnt: 0,
   finishedOrderCnt: 0,

@@ -9,7 +9,7 @@ function Course({ name, count, price }) {
         {name}
       </span>
       <span>{price}€</span>
-      {count > 1 && <span>* {count}</span>}
+      {count > 1 && <span>{count}</span>}
     </div>
   );
 }
