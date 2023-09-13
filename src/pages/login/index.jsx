@@ -37,7 +37,7 @@ function LoginPage() {
     restaurantId: "",
     password: ""
   });
-  const [ btnDisabled, setBtnDisabled ] = useState(false)
+  const [ btnDisabled, setBtnDisabled ] = useState(false);
   const navigate = useNavigate();
   useAutomaticLogin({ setBtnDisabled });
   const loginBtnCbk = () => {
@@ -83,7 +83,13 @@ function LoginPage() {
           type="password"
         />
         <div className="textAlign">
-          <button disabled={btnDisabled} className={styles.loginBtn} onClick={loginBtnCbk}>Se connecter</button>
+          <button disabled={btnDisabled} className={styles.loginBtn} onClick={loginBtnCbk}>
+            { btnDisabled ? "Attention ..." : "Se connecter" }
+          </button>
+        </div>
+        <div className={styles.auxilary}>
+          <div><a href={generateMailtoHref(MailType.FORGOT_PWD)}>Mot de passe oublié</a></div>
+          <div><a href={generateMailtoHref(MailType.PARTNER)}>Devenir Restaurant partenaire</a></div>
         </div>
       </form>
     </div>
@@ -91,3 +97,18 @@ function LoginPage() {
 }
 
 export default LoginPage;
+
+const MailType = {
+  FORGOT_PWD: 'FORGOT_PWD',
+  PARTNER: 'PARTNER'
+}
+
+function generateMailtoHref (mailType, to = 'hello@getmicco.com') {
+  let subject = '', body = '';
+  if (mailType === MailType.FORGOT_PWD) {
+    subject = "J'ai oublié mon mot de passe";
+  } else {
+    subject = "Je souhaites devenir le partenaire";
+  }
+  return `mailto:${to}?subject=${subject}&body=${body}`;
+}

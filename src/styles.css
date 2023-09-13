@@ -22,10 +22,11 @@ body {
 }
 
 :root {
-  --color-paid: #f79410;
-  --color-confirmed: blue;
+  --color-paid: #f79e1b;
+  --color-confirmed: #ffdf35;
   --color-finished: #44d400;
   --color-canceled: red;
+  --color-unpaid: yellow;
 }
 
 /* reset default css */
@@ -67,4 +68,14 @@ button:disabled {
 
 .bold {
   font-weight: bold;
+}
+
+.modal .modal-footer .btn {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.modal .modal-footer .btn.refund {
+  background-color: var(--color-canceled);
+  border-radius: 20px;
 }

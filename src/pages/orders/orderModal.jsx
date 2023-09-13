@@ -2,6 +2,7 @@ import { Modal, Button } from "react-materialize";
 import styles from "./index.module.scss";
 import CourseList from "./courseList";
 import { MessageAction, OrderStatus } from "../../consts";
+import { refundOrder } from './api'
 import cls from "classnames";
 
 function Content({ order }) {
@@ -33,16 +34,39 @@ export default function OrderModal({ isOpen, config, sendMessage }) {
       Archiver
     </Button>
   ];
-  if ([OrderStatus.PAID, OrderStatus.CONFIRMED].includes(order.orderStatus)) {
+  if (order.orderStatus === OrderStatus.UNPAID) {
+    const payOrder = () => sendMessage({ ...order, action: MessageAction.Pay });
+    actions.unshift(
+      <Button modal="close" node="button" waves="green" onClick={payOrder}>
+        Payer
+      </Button>
+    );
+  } else if (order.orderStatus === OrderStatus.PAID) {
+    const confirmOrder = () => sendMessage({ ...order, action: MessageAction.Confirm });
+    actions.unshift(
+      <Button modal="close" node="button" waves="green" onClick={confirmOrder}>
+        Imprimer
+      </Button>
+    );
+  }
+  if (checkShowCancelBtn(order.orderStatus)) {
     const finishOrder = () => {
       sendMessage({
         ...order,
         action: MessageAction.Finish
       });
     };
-    actions.unshift(
-      <Button modal="close" node="button" waves="green" onClick={finishOrder}>
+    actions.push(
+      <Button modal="close" node="button" onClick={finishOrder}>
         Finaliser
+      </Button>
+    );
+  }
+  if (checkShowRefundBtn(order)) {
+    const clickHandler = () => refundOrder(order)
+    actions.push(
+      <Button modal="close" node="button" className="refund" onClick={clickHandler}>
+        Rembourser
       </Button>
     );
   }
@@ -64,4 +88,21 @@ export default function OrderModal({ isOpen, config, sendMessage }) {
       <Content order={order} />
     </Modal>
   );
+}
+
+function checkShowRefundBtn (order) {
+  return order.orderId && [
+      OrderStatus.PAID,
+      OrderStatus.CONFIRMED,
+      OrderStatus.FINISHED,
+      OrderStatus.CANCELED
+    ].includes(order.orderStatus);
+}
+
+function checkShowCancelBtn (orderStatus) {
+  return [
+    OrderStatus.PAID,
+    OrderStatus.CONFIRMED,
+    OrderStatus.UNPAID,
+  ].includes(orderStatus);
 }

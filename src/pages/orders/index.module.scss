@@ -15,7 +15,9 @@
 .topSummaryRow {
   display: flex;
   padding: 10px 0;
+  overflow-x: auto;
   > div {
+    flex: unset;
     display: inline-flex;
     align-items: center;
     margin-right: 15px;
@@ -24,11 +26,15 @@
     box-shadow: 1px 1px 10px rgba(107, 107, 107, .1);
     .ball {
       margin-right: 6px;
+      display: inline-block;
     }
     .title {
       font-weight: bold;
       font-style: italic;
       margin-right: 6px;
+      &.unpaidTitle {
+        width: max-content;
+      }
     }
   }
   span {
@@ -104,6 +110,10 @@
 
 .canceled {
   background: var(--color-canceled);
+}
+
+.unpaid {
+  background: var(--color-unpaid);
 }
 
 .ball {

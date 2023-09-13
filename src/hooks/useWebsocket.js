@@ -20,7 +20,7 @@ function changeOrderStatusInMap(tableMap, table, id, newStatus) {
     return console.error(
       "unable to find the corresponding order by given 'id'"
     );
-  if (newStatus === "archived") orders.splice(idx, 1);
+  if (newStatus === OrderStatus.ARCHIVED) orders.splice(idx, 1);
   else {
     orders[idx].orderStatus = newStatus;
   }
@@ -41,6 +41,9 @@ function handleReturnKey(map, data) {
     switch (action) {
       case MessageAction.SetRestaurantId:
         break;
+      case MessageAction.Pay:
+        changeOrderStatusInMap(tableMap, table, id, OrderStatus.PAID);
+        break;
       case MessageAction.Confirm:
         changeOrderStatusInMap(tableMap, table, id, OrderStatus.CONFIRMED);
         break;
@@ -51,7 +54,7 @@ function handleReturnKey(map, data) {
         changeOrderStatusInMap(tableMap, table, id, OrderStatus.CANCELED);
         break;
       case MessageAction.ArchiveOrder:
-        changeOrderStatusInMap(tableMap, table, id, "archived");
+        changeOrderStatusInMap(tableMap, table, id, OrderStatus.ARCHIVED);
         break;
       default:
     }
@@ -123,6 +126,7 @@ const useWebsocket = (config) => {
   }, []);
 
   const connectWebsocket = useCallback(() => {
+    console.log(1111);
     const curSocket = socketRef.current;
     if (
       !curSocket ||
@@ -148,7 +152,6 @@ const useWebsocket = (config) => {
     () => () => {
       clearInterval(heartIntervalRef.current);
       clearInterval(reconnectIntervalRef.current);
-      // eslint-disable-next-line
       socketRef.current?.close();
     },
     []
@@ -170,3 +173,10 @@ export const SocketConnectionStatus = {
 };
 
 export default useWebsocket;
+
+export function setStatus2Refunded (order) {
+  const { table, id } = order;
+  const { tableMap, updateCnt } = useWsStore.getState();
+  changeOrderStatusInMap(tableMap, table, id, OrderStatus.REFUNDED);
+  updateCnt();
+}

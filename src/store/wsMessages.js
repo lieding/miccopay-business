@@ -13,10 +13,13 @@ function update(state, item) {
       state.paidOrderCnt++;
       break;
     case OrderStatus.CONFIRMED:
-      state.confirmedorderCnt++;
+      state.confirmedOrderCnt++;
       break;
     case OrderStatus.FINISHED:
       state.finishedOrderCnt++;
+      break;
+    case OrderStatus.UNPAID:
+      state.unPaidOrderCnt++;
       break;
     default:
   }
@@ -47,17 +50,19 @@ function getAmtCntMap (tableMap, oldMap = {} ,table) {
 const updateCnt = (set) => () =>
   set((state) => {
     let paidOrderCnt = 0,
-      finishedOrderCnt = 0;
+      finishedOrderCnt = 0,
+      unPaidOrderCnt = 0;
     const tableIterator = state.tableMap.values();
     for (const table of tableIterator) {
       if (!isValidArray(table)) continue;
       for (const order of table) {
         if (order.orderStatus === OrderStatus.PAID) ++paidOrderCnt;
+        else if (order.orderStatus === OrderStatus.UNPAID) ++unPaidOrderCnt;
         else if (order.orderStatus === OrderStatus.FINISHED) ++finishedOrderCnt;
       }
     }
     const tableAmtMap = getAmtCntMap(state.tableMap);
-    return { paidOrderCnt, finishedOrderCnt, tableAmtMap };
+    return { paidOrderCnt, finishedOrderCnt, tableAmtMap, unPaidOrderCnt };
   });
 
 const handleNewMsg = (set) => (data) => {
@@ -88,8 +93,9 @@ const insertPendingOrders = (set) => (orders) => {
 const useWsStore = create((set) => ({
   tableMap: new Map(),
   tableAmtMap: {},
+  unPaidOrderCnt: 0,
   paidOrderCnt: 0,
-  confirmedorderCnt: 0,
+  confirmedOrderCnt: 0,
   finishedOrderCnt: 0,
   handleNewMsg: handleNewMsg(set),
   insertPendingOrders: insertPendingOrders(set),

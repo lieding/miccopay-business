@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 const useConfigStore = create((set) => ({
-  restaurantId: "wokgrill-91170-1",
+  restaurantId: "",
   setRestaurantId: (restaurantId) => set({ restaurantId })
 }));
 

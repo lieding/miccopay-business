@@ -20,7 +20,7 @@ export default function CourseList({ courses, tip }) {
       {isValidArray(courses) &&
         courses.map((course) => <Course key={course.courseKey} {...course} />)}
 
-      {tip && (
+      {tip > 0 && (
         <div className={styles.course}>
           <span className={styles.name}>Pourboire</span>
           <span className={styles.tip}>{tip}€</span>

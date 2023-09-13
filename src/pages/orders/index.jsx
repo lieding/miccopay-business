@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useWebsocket, useAuth } from "../../hooks";
 import { getPendingOrders } from "./api";
-import { useWsStore } from "../../store";
+import { useAuthStore, useWsStore } from "../../store";
 import styles from "./index.module.scss";
 import { dateTimeFormatter } from "../../utils";
 import cls from "classnames";
@@ -17,8 +17,10 @@ function orderCountSelector(state) {
   return {
     paidCnt: state.paidOrderCnt,
     finishedCnt: state.finishedOrderCnt,
+    unPaidCnt: state.unPaidOrderCnt,
     tableMap: state.tableMap,
-    tableAmtMap: state.tableAmtMap
+    tableAmtMap: state.tableAmtMap,
+    confirmedCnt: state.confirmedOrderCnt,
   };
 }
 
@@ -32,6 +34,10 @@ function getOrderCls(orderStatus) {
       case OrderStatus.FINISHED:
         return styles.finished;
       case OrderStatus.CANCELED:
+        return styles.canceled;
+      case OrderStatus.UNPAID:
+        return styles.unpaid;
+      case OrderStatus.REFUNDED:
         return styles.canceled;
       default:
     }
@@ -76,11 +82,18 @@ function Table({ orders, table, amountCnt, ...params }) {
 }
 
 function OrderDisplayPage() {
-  useAuth();
+  const { isAuth } = useAuth();
   const { connectWebsocket, sendMessage, connectionStatus } = useWebsocket({
     connectedCbk: getPendingOrders
   });
-  const { paidCnt, tableMap, finishedCnt, tableAmtMap } = useWsStore(orderCountSelector);
+  const {
+    paidCnt,
+    tableMap,
+    finishedCnt,
+    tableAmtMap,
+    unPaidCnt,
+    confirmedCnt,
+  } = useWsStore(orderCountSelector);
   const [nowTimestamp, setTimestamp] = useState(() => Date.now());
 
   const [isModalOpen, toggleModal] = useState(false);
@@ -96,10 +109,13 @@ function OrderDisplayPage() {
 
   useEffect(() => {
     // getPendingOrders();
-    connectWebsocket();
-    const intertvalId = setInterval(() => setTimestamp(Date.now()), 60 * 1000);
+    let intertvalId;
+    if (isAuth) {
+      connectWebsocket();
+      intertvalId = setInterval(() => setTimestamp(Date.now()), 60 * 1000);
+    }
     return () => clearInterval(intertvalId);
-  }, [setTimestamp]);
+  }, [isAuth]);
 
   const tableCnt = tableMap.size;
   const tableKeys = useMemo(() => Array.from(tableMap.keys()).sort(), [
@@ -116,6 +132,8 @@ function OrderDisplayPage() {
         paidCnt={paidCnt}
         tableCnt={tableCnt}
         finishedCnt={finishedCnt}
+        unPaidCnt={unPaidCnt}
+        confirmedCnt={confirmedCnt}
       />
       <div className={styles.tableWrapper}>
         {tableKeys.map((table) => (
