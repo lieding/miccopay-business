@@ -21,6 +21,9 @@ function update(state, item) {
     case OrderStatus.UNPAID:
       state.unPaidOrderCnt++;
       break;
+    case OrderStatus.REFUNDED:
+      state.refunedOrderCnt++;
+      break;
     default:
   }
 }
@@ -51,7 +54,8 @@ const updateCnt = (set) => () =>
   set((state) => {
     let paidOrderCnt = 0,
       finishedOrderCnt = 0,
-      unPaidOrderCnt = 0;
+      unPaidOrderCnt = 0,
+      refunedOrderCnt = 0;
     const tableIterator = state.tableMap.values();
     for (const table of tableIterator) {
       if (!isValidArray(table)) continue;
@@ -59,10 +63,11 @@ const updateCnt = (set) => () =>
         if (order.orderStatus === OrderStatus.PAID) ++paidOrderCnt;
         else if (order.orderStatus === OrderStatus.UNPAID) ++unPaidOrderCnt;
         else if (order.orderStatus === OrderStatus.FINISHED) ++finishedOrderCnt;
+        else if (order.orderStatus === OrderStatus.REFUNDED) ++refunedOrderCnt;
       }
     }
     const tableAmtMap = getAmtCntMap(state.tableMap);
-    return { paidOrderCnt, finishedOrderCnt, tableAmtMap, unPaidOrderCnt };
+    return { paidOrderCnt, finishedOrderCnt, tableAmtMap, unPaidOrderCnt, refunedOrderCnt };
   });
 
 const handleNewMsg = (set) => (data) => {
@@ -97,6 +102,7 @@ const useWsStore = create((set) => ({
   paidOrderCnt: 0,
   confirmedOrderCnt: 0,
   finishedOrderCnt: 0,
+  refunedOrderCnt: 0,
   handleNewMsg: handleNewMsg(set),
   insertPendingOrders: insertPendingOrders(set),
   updateCnt: updateCnt(set)

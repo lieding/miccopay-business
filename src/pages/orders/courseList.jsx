@@ -3,13 +3,14 @@ import { isValidArray } from "../../utils";
 import cls from "classnames";
 
 function Course({ name, count, price }) {
+  const subTotal = (price * (count || 1)).toFixed(2);
   return (
     <div className={styles.course}>
+      {count > 1 && <span>{count} x</span>}
       <span className={cls(styles.name, "course-list-item-name")} title={name}>
         {name}
       </span>
-      <span>{price}€</span>
-      {count > 1 && <span>{count}</span>}
+      <span>{subTotal}€</span>
     </div>
   );
 }

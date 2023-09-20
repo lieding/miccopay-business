@@ -1,7 +1,7 @@
 import styles from "./index.module.scss";
 import cls from "classnames";
 
-function TopSummaryRow({ paidCnt, tableCnt, finishedCnt, unPaidCnt, confirmedCnt }) {
+function TopSummaryRow({ paidCnt, refundCnt, finishedCnt, unPaidCnt, confirmedCnt }) {
   return (
     <div className={styles.topSummaryRow}>
       {/* <div>
@@ -27,6 +27,11 @@ function TopSummaryRow({ paidCnt, tableCnt, finishedCnt, unPaidCnt, confirmedCnt
         <div className={cls(styles.finished, styles.ball)}></div>
         <span className={styles.title}>Finalisé</span>
         <span>{finishedCnt}</span>
+      </div>
+      <div>
+        <div className={cls(styles.canceled, styles.ball)}></div>
+        <span className={styles.title}>Remboursé</span>
+        <span>{refundCnt}</span>
       </div>
     </div>
   );

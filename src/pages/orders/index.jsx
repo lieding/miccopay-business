@@ -21,6 +21,7 @@ function orderCountSelector(state) {
     tableMap: state.tableMap,
     tableAmtMap: state.tableAmtMap,
     confirmedCnt: state.confirmedOrderCnt,
+    refundCnt: state.refunedOrderCnt,
   };
 }
 
@@ -46,17 +47,30 @@ function getOrderCls(orderStatus) {
 }
 
 function Order({ order, nowTimestamp, openModal }) {
-  const { orderStatus, updatedAt, orders: courses, amount } = order;
+  const { orderStatus, updatedAt, orders: courses, amount, refundAmt } = order;
   const timeElapsed = dateTimeFormatter(updatedAt, nowTimestamp);
   const bgCls = getOrderCls(orderStatus);
   const onClick = () => openModal(order);
+  const isRefund = orderStatus === OrderStatus.REFUNDED && refundAmt;
+  let refundContent = null;
+  if (isRefund) {
+    const amt = (refundAmt / 100).toFixed(2);
+    refundContent = <div className={cls(styles.refundContent, 'flex-between')}>
+      <span>Remboursement</span>
+      <span>{ amt }€</span>
+    </div>;
+  }
 
   return (
-    <div className={cls(styles.orderWrapper, bgCls)} onClick={onClick}>
+    <div
+      className={cls(styles.orderWrapper, bgCls, isRefund ? styles.refund : null)}
+      onClick={onClick}
+    >
       <div className={cls(styles.total, "flex-between")}>
         <span>Total</span>
-        <span>{amount}€</span>
+        <span className={styles.amount}>{amount}€</span>
       </div>
+      { refundContent }
       <CourseList courses={courses} tip={order.tip} />
       <div>
         <span className={styles.timeElapsed}>il y a {timeElapsed}</span>
@@ -93,6 +107,7 @@ function OrderDisplayPage() {
     tableAmtMap,
     unPaidCnt,
     confirmedCnt,
+    refundCnt,
   } = useWsStore(orderCountSelector);
   const [nowTimestamp, setTimestamp] = useState(() => Date.now());
 
@@ -108,9 +123,9 @@ function OrderDisplayPage() {
   );
 
   useEffect(() => {
-    // getPendingOrders();
     let intertvalId;
     if (isAuth) {
+      // getPendingOrders();
       connectWebsocket();
       intertvalId = setInterval(() => setTimestamp(Date.now()), 60 * 1000);
     }
@@ -134,6 +149,7 @@ function OrderDisplayPage() {
         finishedCnt={finishedCnt}
         unPaidCnt={unPaidCnt}
         confirmedCnt={confirmedCnt}
+        refundCnt={refundCnt}
       />
       <div className={styles.tableWrapper}>
         {tableKeys.map((table) => (

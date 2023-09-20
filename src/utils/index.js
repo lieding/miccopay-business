@@ -61,3 +61,7 @@ export function getLoginToken() {
 export function clearLoginToken() {
   localStorage.removeItem(LoginTokenKey);
 }
+
+export function numberMutiplyBy100 (num) {
+  return Math.round(num * 100);
+}

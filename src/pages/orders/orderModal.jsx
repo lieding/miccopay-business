@@ -4,6 +4,7 @@ import CourseList from "./courseList";
 import { MessageAction, OrderStatus } from "../../consts";
 import { refundOrder } from './api'
 import cls from "classnames";
+import { useEffect, useRef, useState } from "react";
 
 function Content({ order }) {
   return (
@@ -18,6 +19,35 @@ function Content({ order }) {
       </div>
     </div>
   );
+}
+
+function Refund ({ order, visible, closeModal }) {
+  const [ expanded, setExpanded ] = useState(false)
+  const ref = useRef(null);
+  const submitHandler = (ev) => {
+    ev.preventDefault();
+    const el = ref.current
+    if (el) {
+      const value = Number(el.value);
+      if (value < 0 || value > order.amount)
+        return el.setCustomValidity(`le montant dois être supérieur à 0 et inférieur à ${order.amount}`);
+      refundOrder(order, value !== order.amount ? value : undefined);
+      closeModal();
+    }
+  }
+  useEffect(() => setExpanded(false), [visible]);
+  if (!expanded) {
+    return <Button node="button" className="refund" onClick={() => setExpanded(true)}>REMBOURSER</Button>
+  }
+  return <form className="refundForm" onSubmit={submitHandler}>
+    <input
+      defaultValue={order.amount}
+      required
+      ref={el => ref.current = el}
+    />
+    <span>€</span>
+    <Button node="button" small>Confirmer</Button>
+  </form>
 }
 
 export default function OrderModal({ isOpen, config, sendMessage }) {
@@ -63,12 +93,7 @@ export default function OrderModal({ isOpen, config, sendMessage }) {
     );
   }
   if (checkShowRefundBtn(order)) {
-    const clickHandler = () => refundOrder(order)
-    actions.push(
-      <Button modal="close" node="button" className="refund" onClick={clickHandler}>
-        Rembourser
-      </Button>
-    );
+    actions.push(<Refund order={order} visible={isOpen} closeModal={closeModal} />);
   }
   return (
     <Modal

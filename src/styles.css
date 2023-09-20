@@ -75,7 +75,32 @@ button:disabled {
   margin-right: 5px;
 }
 
-.modal .modal-footer .btn.refund {
+.modal .modal-footer .refund {
   background-color: var(--color-canceled);
   border-radius: 20px;
+}
+
+.modal .modal-footer .refundForm {
+  display: inline-block;
+  padding: 1px 8px;
+  margin: 0 0 3px 10px;
+  border: 2px solid var(--color-canceled);
+  border-radius: 10px;
+  position: relative;
+}
+
+.modal .modal-footer .refundForm::before {
+  content: 'Montant à rembourser';
+  position: absolute;
+  left: 8px;
+  top: -14px;
+  background: #fff;
+}
+
+.modal .modal-footer .refundForm input {
+  display: inline-block;
+  max-width: 60px;
+}
+.modal .modal-footer .refundForm button {
+  margin-left: 6px;
 }

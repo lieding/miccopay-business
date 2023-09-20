@@ -79,8 +79,20 @@
           display: inline-block;
         }
       }
+      .refundContent {
+        span {
+          display: inline-block;
+        }
+      }
       &:first-child {
         margin-left: unset;
+      }
+      &.refund {
+        .total {
+          .amount {
+            text-decoration: line-through;
+          }
+        }
       }
     }
   }
